@@ -4,52 +4,69 @@
 \alias{create_xy_graph}
 \title{Create an (x, y) scatterplot graph}
 \usage{
-create_xy_graph(series_pts, series_lines, x_min, x_max, x_divisions, y_min,
-  y_max, y_divisions, aspect_ratio = c(1, 1), x_axis_lab_dist = 0.3,
-  y_axis_lab_dist = 0.3, x_axis_tick_width = 0.1, y_axis_tick_width = 0.1,
-  color_axis_ticks = "gray", color_axis_labels = "gray")
+create_xy_graph(..., aspect_ratio = c(1, 1), x_scale = NULL,
+  y_scale = NULL, xy_major_steps = NULL, x_name = NULL, y_name = NULL,
+  heading = NULL, footer = NULL, x_name_location = "inside",
+  include_legend = TRUE, legend_offset = c(0, 0), xy_axis_lab_dist = c(0,
+  0), xy_axis_tick_width = c(0.1, 0.1), color_axis_ticks = "gray",
+  color_axis_labels = "gray", bg_color = "transparent")
 }
 \arguments{
-\item{series_pts}{an NDF containing points for
-graphing.}
-
-\item{series_lines}{an EDF containing connecting
-lines.}
-
-\item{x_min}{the minimum x value to display.}
-
-\item{x_max}{the maximum x value to display.}
-
-\item{x_divisions}{the number of divisions between
-major x-axis marks.}
-
-\item{y_min}{the minimum y value to display.}
-
-\item{y_max}{the maximum y value to display.}
-
-\item{y_divisions}{the number of divisions between
-major y-axis marks.}
+\item{...}{one or more NDFs containing points
+(created through the use of the \code{create_xy_pts()}
+function) or EDFs containing lines (created using
+the \code{create_xy_lines()} function).}
 
 \item{aspect_ratio}{the aspect ratio of the plot
 area.}
 
-\item{x_axis_lab_dist}{the distance between the x
-axis and its labels.}
+\item{x_scale}{the minimum and maximum x value to
+display on the x-axis. Not providing values will
+result in autoscaling in the x direction based on
+provided x values.}
 
-\item{y_axis_lab_dist}{the distance between the y
-axis and its labels.}
+\item{y_scale}{the minimum and maximum y value to
+display on the y-axis. Not providing values will
+result in autoscaling in the y direction based on
+provided y values.}
 
-\item{x_axis_tick_width}{the span of the x-axis tick
-marks.}
+\item{xy_major_steps}{the number of major steps
+across the x and y directions. Not providing values
+will result in automatically provided major steps.}
 
-\item{y_axis_tick_width}{the span of the y-axis tick
-marks.}
+\item{x_name}{the x-axis name.}
+
+\item{y_name}{the y-axis name.}
+
+\item{heading}{text to display as a heading above
+the plot area.}
+
+\item{footer}{text to display as a footer below the
+plot area.}
+
+\item{x_name_location}{the location of the x-axis
+name, either \code{inside} (default) or \code{outside}.}
+
+\item{include_legend}{an option for whether to
+include a legend.}
+
+\item{legend_offset}{the x and y offset (from
+top-right) of the legend.}
+
+\item{xy_axis_lab_dist}{the distances between the x
+and y axes and their labels.}
+
+\item{xy_axis_tick_width}{the widths of the x- and
+y-axis tick mark}
 
 \item{color_axis_ticks}{the color of the axis tick
 marks.}
 
 \item{color_axis_labels}{the color of the axis
 labels.}
+
+\item{bg_color}{the color for the background of the
+entire viewable area}
 }
 \description{
 Create an (x, y) scatterplot graph
@@ -58,45 +75,53 @@ lines.
 }
 \examples{
 \dontrun{
+library(DiagrammeRsvg)
 library(magrittr)
-# Create a series of (x, y) data
-# points as an NDF
-series_01 <-
+
+# Create three groups (Setosa, Versicolor, and Virginica)
+# of x,y datapoints for petal length (x) and petal width (y)
+setosa <-
   create_xy_pts(
-    series_label = "series_01",
-    x = c(0.0, 1.3, 3.3, 5.2,
-          6.2, 7.9, 8.6, 9.7),
-    y = c(2.5, 1.6, 2.7, 3.2,
-          4.2, 6.9, 8.7, 5.1),
-    shape = "circle",
-    line_width = 2.5,
-    fill_color = "white",
+    series_label = "Setosa",
+    x = subset(iris, Species == "setosa")$Petal.Length,
+    y = subset(iris, Species == "setosa")$Petal.Width,
+    line_color = "red")
+
+versicolor <-
+  create_xy_pts(
+    series_label = "Versicolor",
+    x = subset(iris, Species == "versicolor")$Petal.Length,
+    y = subset(iris, Species == "versicolor")$Petal.Width,
+    line_color = "green")
+
+virginica <-
+  create_xy_pts(
+    series_label = "Virginica",
+    x = subset(iris, Species == "virginica")$Petal.Length,
+    y = subset(iris, Species == "virginica")$Petal.Width,
     line_color = "blue")
 
-# Create an EDF with connections
-# between (x, y) data points
-series_01_lines <-
-  create_xy_lines(
-    xy_pts = series_01,
-    line_color = "blue",
-    line_width = 2.5
-  )
+# Add these xy points to the `create_xy_graph()`
+# function and add axis titles and a heading
+iris_length_width <-
+  create_xy_graph(
+    setosa,
+    versicolor,
+    virginica,
+    x_name = "Petal Length",
+    y_name = "Petal Width",
+    heading = "Iris Dataset",
+    legend_offset = c(0, 6),
+    bg_color = "white")
 
-# Create an (x, y) plot
-xy_plot <-
-create_xy_graph(
-  series_pts = series_01,
-  series_lines = series_01_lines,
-  x_min = 0, x_max = 10,
-  x_divisions = 10,
-  y_min = 0, y_max = 10,
-  y_divisions = 10)
+# View the graph
+iris_length_width \%>\% render_graph
 
-# View the plot
-xy_plot \%>\% render_graph
+# Export the graph to a PDF file
+iris_length_width \%>\% export_graph("iris.pdf")
 
-# Save the graph as a PDF
-xy_plot \%>\% export_graph
+# Export the graph to a PDF file
+iris_length_width \%>\% export_graph("iris.png")
 }
 }
 
