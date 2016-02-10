@@ -6,10 +6,12 @@
 \usage{
 create_xy_graph(..., aspect_ratio = c(1, 1), x_scale = NULL,
   y_scale = NULL, xy_major_steps = NULL, x_name = NULL, y_name = NULL,
-  heading = NULL, footer = NULL, x_name_location = "inside",
-  include_legend = TRUE, legend_offset = c(0, 0), xy_axis_lab_dist = c(0,
-  0), xy_axis_tick_width = c(0.1, 0.1), color_axis_ticks = "gray",
-  color_axis_labels = "gray", bg_color = "transparent")
+  heading = NULL, footer = NULL, xy_value_labels = NULL,
+  xy_value_decimals = NULL, x_name_location = "inside",
+  x_tick_marks = "centered", y_tick_marks = "centered",
+  include_legend = TRUE, legend_offset = c(0, 0), x_value_prefix = NULL,
+  y_value_prefix = NULL, x_value_suffix = NULL, y_value_suffix = NULL,
+  bg_color = "transparent")
 }
 \arguments{
 \item{...}{one or more NDFs containing points
@@ -44,8 +46,31 @@ the plot area.}
 \item{footer}{text to display as a footer below the
 plot area.}
 
+\item{xy_value_labels}{the format for displaying
+values of the x and y axes. Options are
+\code{numeric} (the default), \code{percentage}, or
+currency through the use of applying a 3-letter or
+3-number ISO 4217 currency codes. If a single-length
+value is provided, then that format type will be
+applied to both the x and y axes. Providing a vector
+of length 2 will apply the formats to the x and y
+axes, respectively.}
+
+\item{xy_value_decimals}{the number of decimal
+places to show for numeric values labeling the x and
+y axes. If a single-length value is provided, then
+that value will be applied to both the x and y
+axes. Providing a vector of length 2 will apply
+formatting to the x and y axes, respectively.}
+
 \item{x_name_location}{the location of the x-axis
 name, either \code{inside} (default) or \code{outside}.}
+
+\item{x_tick_marks}{choose whether to show tick
+marks along the x axis, and where to show them.}
+
+\item{y_tick_marks}{choose whether to show tick
+marks along the y axis, and where to show them.}
 
 \item{include_legend}{an option for whether to
 include a legend.}
@@ -53,17 +78,17 @@ include a legend.}
 \item{legend_offset}{the x and y offset (from
 top-right) of the legend.}
 
-\item{xy_axis_lab_dist}{the distances between the x
-and y axes and their labels.}
+\item{x_value_prefix}{a fixed prefix to apply to all
+labels of the x axis.}
 
-\item{xy_axis_tick_width}{the widths of the x- and
-y-axis tick mark}
+\item{y_value_prefix}{a fixed prefix to apply to all
+labels of the y axis.}
 
-\item{color_axis_ticks}{the color of the axis tick
-marks.}
+\item{x_value_suffix}{a fixed suffix to apply to all
+labels of the x axis.}
 
-\item{color_axis_labels}{the color of the axis
-labels.}
+\item{y_value_suffix}{a fixed suffix to apply to all
+labels of the y axis.}
 
 \item{bg_color}{the color for the background of the
 entire viewable area}
