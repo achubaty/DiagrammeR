@@ -8,10 +8,10 @@ create_xy_graph(..., aspect_ratio = c(1, 1), x_scale = NULL,
   y_scale = NULL, xy_major_steps = NULL, x_name = NULL, y_name = NULL,
   heading = NULL, footer = NULL, xy_value_labels = NULL,
   xy_value_decimals = NULL, x_name_location = "inside",
-  x_tick_marks = "centered", y_tick_marks = "centered",
-  include_legend = TRUE, legend_offset = c(0, 0), x_value_prefix = NULL,
-  y_value_prefix = NULL, x_value_suffix = NULL, y_value_suffix = NULL,
-  bg_color = "transparent")
+  x_tick_marks = "inside", y_tick_marks = "inside",
+  include_xy_minima = c(TRUE, TRUE), include_legend = TRUE,
+  legend_offset = c(0, 0), x_value_prefix = NULL, y_value_prefix = NULL,
+  x_value_suffix = NULL, y_value_suffix = NULL, bg_color = "transparent")
 }
 \arguments{
 \item{...}{one or more NDFs containing points
@@ -25,36 +25,52 @@ area.}
 \item{x_scale}{the minimum and maximum x value to
 display on the x-axis. Not providing values will
 result in autoscaling in the x direction based on
-provided x values.}
+provided data.}
 
 \item{y_scale}{the minimum and maximum y value to
 display on the y-axis. Not providing values will
 result in autoscaling in the y direction based on
-provided y values.}
+provided data.}
 
 \item{xy_major_steps}{the number of major steps
 across the x and y directions. Not providing values
 will result in automatically provided major steps.}
 
-\item{x_name}{the x-axis name.}
+\item{x_name}{an optional x-axis name.}
 
-\item{y_name}{the y-axis name.}
+\item{y_name}{an optional y-axis name.}
 
 \item{heading}{text to display as a heading above
-the plot area.}
+the plot area. Providing two character values
+will result in left- and right-justified text on
+the same line above the plot area. Using
+consecuctive \code{#} signs increases the header
+level and has the result of reducing the size of the
+text.}
 
 \item{footer}{text to display as a footer below the
-plot area.}
+plot area. Providing two character values
+will result in left- and right-justified text on
+the same line below the plot area. Using
+consecuctive \code{#} signs increases the header
+level and has the result of reducing the size of the
+text.}
 
 \item{xy_value_labels}{the format for displaying
 values of the x and y axes. Options are
-\code{numeric} (the default), \code{percentage}, or
-currency through the use of applying a 3-letter or
-3-number ISO 4217 currency codes. If a single-length
-value is provided, then that format type will be
-applied to both the x and y axes. Providing a vector
-of length 2 will apply the formats to the x and y
-axes, respectively.}
+\code{numeric} (the default), \code{percentage},
+\code{date_time} or currency (by use of a 3-letter
+or 3-number ISO 4217 currency code. If using
+currency, one can additionally state whether to
+abbreviate large values with a \code{K} (thousands),
+an \code{M} (millions), a \code{B} (billions), or a
+\code{T} (trillions) by appending the currency code
+with a colon the letter for the abbreviated label
+(e.g., \code{USD:M}). If a single-length value is
+provided, then that format type will be applied to
+both the x and y axes. Providing a vector of length
+2 will allow for application of the provided formats
+to the x and y axes, respectively.}
 
 \item{xy_value_decimals}{the number of decimal
 places to show for numeric values labeling the x and
@@ -67,10 +83,17 @@ formatting to the x and y axes, respectively.}
 name, either \code{inside} (default) or \code{outside}.}
 
 \item{x_tick_marks}{choose whether to show tick
-marks along the x axis, and where to show them.}
+marks along the x axis, and where to show them.
+Options are \code{inside} (default), \code{outside},
+or \code{centered}.}
 
 \item{y_tick_marks}{choose whether to show tick
-marks along the y axis, and where to show them.}
+marks along the y axis, and where to show them.
+Options are \code{inside} (default), \code{outside},
+or \code{centered}.}
+
+\item{include_xy_minima}{choose whether to show the
+minimum values for the x and y axes, respectively.}
 
 \item{include_legend}{an option for whether to
 include a legend.}
@@ -133,9 +156,9 @@ iris_length_width <-
     setosa,
     versicolor,
     virginica,
-    x_name = "Petal Length",
-    y_name = "Petal Width",
-    heading = "Iris Dataset",
+    x_name = "Petal Length (cm)",
+    y_name = "Petal Width (cm)",
+    heading = "#Iris Dataset",
     legend_offset = c(0, 6),
     bg_color = "white")
 
